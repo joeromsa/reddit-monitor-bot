@@ -143,7 +143,7 @@ def get_all_data():
 reddit = praw.Reddit('bot1')
 
 #Client call to the twilio api to send text messages.
-client = Client("AC10a274c321bf8dc2858c68027b3c1089", "78707f12326e57eec6da92a1269beb9e")
+client = Client("AC10a274c321bf8dc2858c68027b3c1089", "6b987a946fa9417096708cead15d4a0f")
 
 #Subreddit for the program to get posts from.
 subreddit = reddit.subreddit('buildapcsales')
