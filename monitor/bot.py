@@ -22,7 +22,7 @@ def database_check():
                 conn.close()
 
 
-#Get the data from the database
+#Gets the id of the idividual reddit posts from the database and returns them as a list.
 def get_data_id():
         conn = sqlite3.connect('databaseForMonitor.db')
 
@@ -45,7 +45,8 @@ def get_data_id():
 
         return ar
 
-#check if already in datbase
+#Checks if the posts in the database match the ideas in the list of newly pulled ids. If match there is a match, the 
+#id, title, and url is removed from their respective lists.
 def check(id):
         for items in get_data_id():
                 num = 0
@@ -57,7 +58,7 @@ def check(id):
                         continue
                 num += 1
 
-#add data to the database
+#A loop that takes the number of items in the posts list and adds the title, url, and id to the database
 def add_data():
         conn = sqlite3.connect('databaseForMonitor.db.db')
 
@@ -72,7 +73,7 @@ def add_data():
 
         conn.close()
 
-#returns the title of all posts
+#Returns the title of all posts in the database and prints them to the screen. Used for testing purposes. 
 def check_items():
         conn = sqlite3.connect('databaseForMonitor.db.db')
 
@@ -84,7 +85,7 @@ def check_items():
 
         conn.close()
 
-#deletes everything in the database
+#Deletes everything in the database. Used for testing purposes.
 def delete_all():
         conn = sqlite3.connect('databaseForMonitor.db.db')
 
@@ -95,7 +96,8 @@ def delete_all():
        
         conn.close()
 
-#deletes 2/3 of the database
+#Gets the rowid of the oldest entry in the database and the newest, then subtracts to find how many posts are in the database.
+#If the total is over 200, it is multiplied by 2/3 and that amount, starting with the oldest is removed from the database.
 def delete_most():
         conn = sqlite3.connect('databaseForMonitor.db.db')
 
@@ -123,7 +125,7 @@ def delete_most():
         else:
                 conn.close()
 
-#gets all the rowid from the database
+#Gets all the rowids from the database. Used for testing purposes.
 def get_all_data():
         conn = sqlite3.connect('databaseForMonitor.db.db')
 
@@ -137,26 +139,26 @@ def get_all_data():
         conn.close()
 
     
-#log into reddit api. Bot credintials in praw.ini
+#Log into reddit api. Bot credintials found in the praw.ini file.
 reddit = praw.Reddit('bot1')
 
-#client call
+#Client call to the twilio api to send text messages.
 client = Client("AC10a274c321bf8dc2858c68027b3c1089", "78707f12326e57eec6da92a1269beb9e")
 
-#subreddit for the bot
+#Subreddit for the program to get posts from.
 subreddit = reddit.subreddit('buildapcsales')
 
-#variables with what we are looking for, the size, and the email object
+#Variables used to sort data.
 word = "[monitor]"
 size = "34\""
 desc = "ultrawide"
 
-#lists to hold title of posts, url, and id
+#Lists to hold title of posts, url, and id.
 posts = []
 url = []
 post_id = []
 
-#looking at the new submissions
+#Loop to pull the new submissions from the subreddit and add the parts to their respective lists.
 for submission in subreddit.new():
     if word in submission.title.lower() and size in submission.title or desc in submission.title.lower():
         post_id.append(submission.id)
@@ -168,10 +170,10 @@ for submission in subreddit.new():
 #Check if database and tables have been created yet.
 database_check()
 
-#check if posts are new     
+#Check if posts are new.   
 check(post_id)
 
-#notify of the new posts
+#Creating the messages and notifying the user of any new posts that match the criteria.
 num = 0
 for data in posts:
         msg = posts[num] + "\n\n" + url[num]
@@ -179,7 +181,7 @@ for data in posts:
         client.messages.create(to="+14028850351", from_="+15313018826", body=msg)
         num += 1
 
-#add new data to the database
+#Add new data to the database and delete posts if needed.
 add_data()
 delete_most()
 
