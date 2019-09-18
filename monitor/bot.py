@@ -143,7 +143,7 @@ def get_all_data():
 reddit = praw.Reddit('bot1')
 
 #Client call to the twilio api to send text messages.
-client = Client("AC10a274c321bf8dc2858c68027b3c1089", "6b987a946fa9417096708cead15d4a0f")
+client = Client("####", "#####")
 
 #Subreddit for the program to get posts from.
 subreddit = reddit.subreddit('buildapcsales')
@@ -178,7 +178,7 @@ num = 0
 for data in posts:
         msg = posts[num] + "\n\n" + url[num]
         print(msg)
-        client.messages.create(to="+14028850351", from_="+15313018826", body=msg)
+        client.messages.create(to="####", from_="####", body=msg)
         num += 1
 
 #Add new data to the database and delete posts if needed.
